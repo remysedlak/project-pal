@@ -592,7 +592,7 @@ export default function Popup() {
   };
 
   return (
-    <div className="w-[460px] max-w-full bg-gray-900 p-3 text-gray-100">
+    <div className="w-[460px] max-w-full bg-gray-900 p-1 text-gray-100">
       <div className="rounded-3xl border border-gray-800 bg-gray-950/70 p-3 shadow-lg">
         <ProjectHeader
           onAdd={openCreateForm}

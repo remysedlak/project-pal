@@ -45,7 +45,13 @@ export default function ProjectForm({
   onSelectOption,
 }: ProjectFormProps) {
   return (
-    <div className="space-y-3 rounded-2xl border border-gray-800 bg-gray-950/40 p-3">
+    <form
+      className="space-y-3 rounded-2xl border border-gray-800 bg-gray-950/40 p-3"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSave();
+      }}
+    >
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold">
           {formMode === "create" ? "Add Project" : "Edit Project"}
@@ -53,6 +59,7 @@ export default function ProjectForm({
         <div className="flex items-center gap-2">
           {formMode === "create" && (
             <button
+              type="button"
               className="rounded-lg border border-gray-700 px-2 py-1 text-xs text-gray-300 transition hover:border-gray-500 hover:text-white"
               onClick={onToggleAiMode}
             >
@@ -60,6 +67,7 @@ export default function ProjectForm({
             </button>
           )}
           <button
+            type="button"
             className="rounded-lg border border-gray-700 px-2 py-1 text-xs text-gray-300 transition hover:border-gray-500 hover:text-white"
             onClick={onClose}
           >
@@ -81,6 +89,7 @@ export default function ProjectForm({
           </label>
           <div className="flex flex-wrap items-center gap-2">
             <button
+              type="button"
               className="rounded-xl bg-emerald-500 px-3 py-2 text-sm font-semibold text-gray-900 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
               onClick={onGenerateOptions}
               disabled={!aiSummary.trim() || isGeneratingOptions}
@@ -93,6 +102,7 @@ export default function ProjectForm({
             <div className="space-y-2">
               {aiOptions.map((option, index) => (
                 <button
+                  type="button"
                   key={`${option.name}-${index}`}
                   className="w-full rounded-2xl border border-gray-800 bg-gray-900/60 p-3 text-left transition hover:border-gray-600"
                   onClick={() => onSelectOption(option)}
@@ -173,20 +183,21 @@ export default function ProjectForm({
 
           <div className="flex justify-end gap-2">
             <button
+              type="button"
               className="rounded-xl border border-gray-700 px-3 py-2 text-sm text-gray-300 transition hover:border-gray-500 hover:text-white"
               onClick={onClose}
             >
               Cancel
             </button>
             <button
+              type="submit"
               className="rounded-xl bg-emerald-500 px-3 py-2 text-sm font-semibold text-gray-900 transition hover:bg-emerald-400"
-              onClick={onSave}
             >
               Save
             </button>
           </div>
         </>
       )}
-    </div>
+    </form>
   );
 }
