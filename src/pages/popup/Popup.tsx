@@ -86,8 +86,6 @@ const parseLineList = (value: string) =>
     .map((entry) => entry.trim())
     .filter(Boolean);
 
-const STORAGE_KEY = "project-pal:data";
-
 const extractJson = (value: string) => {
   const fencedMatch = value.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
   if (fencedMatch?.[1]) {
@@ -171,6 +169,8 @@ export default function Popup() {
       console.error("Failed to save projects to localStorage", error);
     }
   }, [projectList]);
+
+  useEffect(() => {
     setStoryDraft("");
     setAiError(null);
     setRiskError(null);
@@ -184,6 +184,8 @@ export default function Popup() {
       console.error("Failed to save feedback to localStorage", error);
     }
   }, [aiFeedbackByProjectId]);
+
+  useEffect(() => {
     if (!isFormOpen) {
       setIsAiFormMode(false);
       setAiSummary("");
@@ -191,14 +193,6 @@ export default function Popup() {
       setAiOptionsError(null);
     }
   }, [isFormOpen]);
-
-  useEffect(() => {
-    const payload = JSON.stringify({
-      projects: projectList,
-      aiFeedbackByProjectId,
-    });
-    localStorage.setItem(STORAGE_KEY, payload);
-  }, [projectList, aiFeedbackByProjectId]);
 
   const updateFormField = (field: keyof ProjectFormValues) =>
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
