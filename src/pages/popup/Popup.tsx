@@ -25,6 +25,7 @@ const initialProjects: Project[] = [
     name: "Project Pal",
     description:
       "Browser extension that helps teams track projects, capture context, and surface next steps during daily work.",
+    nextDeadline: "",
     lastUpdated: formatTimestamp(new Date()),
     techStack: ["React", "TypeScript", "Vite", "Tailwind"],
     userStories: [
@@ -37,6 +38,7 @@ const initialProjects: Project[] = [
     name: "Impact Hub",
     description:
       "Internal platform that centralizes portfolio projects, timelines, and outcomes to help leadership make faster decisions.",
+    nextDeadline: "",
     lastUpdated: formatTimestamp(new Date()),
     techStack: ["Svelte", "Node.js", "Postgres"],
     userStories: [
@@ -49,6 +51,7 @@ const initialProjects: Project[] = [
     name: "StoryCraft",
     description:
       "Program storytelling toolkit that turns qualitative feedback into shareable narratives and reports.",
+    nextDeadline: "",
     lastUpdated: formatTimestamp(new Date()),
     techStack: ["Vue", "Pinia", "Firebase"],
     userStories: [
@@ -62,6 +65,7 @@ const emptyFormValues: ProjectFormValues = {
   id: "",
   name: "",
   description: "",
+  nextDeadline: "",
   techStackInput: "",
   userStoriesInput: "",
 };
@@ -114,6 +118,7 @@ export default function Popup() {
     Array<{
       name: string;
       description: string;
+      nextDeadline: string;
       techStack: string[];
       userStories: string[];
     }>
@@ -200,6 +205,7 @@ export default function Popup() {
       id: project.id,
       name: project.name,
       description: project.description,
+      nextDeadline: project.nextDeadline,
       techStackInput: project.techStack.join(", "),
       userStoriesInput: project.userStories.join("\n"),
     });
@@ -229,6 +235,7 @@ export default function Popup() {
     }
 
     const trimmedDescription = formValues.description.trim();
+    const trimmedNextDeadline = formValues.nextDeadline.trim();
     const techStack = parseCommaList(formValues.techStackInput);
     const userStories = parseLineList(formValues.userStoriesInput);
 
@@ -237,6 +244,7 @@ export default function Popup() {
         id: `project-${Date.now().toString(36)}`,
         name: trimmedName,
         description: trimmedDescription,
+        nextDeadline: trimmedNextDeadline,
         lastUpdated: formatTimestamp(new Date()),
         techStack,
         userStories,
@@ -251,6 +259,7 @@ export default function Popup() {
                 ...project,
                 name: trimmedName,
                 description: trimmedDescription,
+                nextDeadline: trimmedNextDeadline,
                 lastUpdated: formatTimestamp(new Date()),
                 techStack,
                 userStories,
@@ -284,12 +293,13 @@ export default function Popup() {
       "Each option must include:",
       "- name",
       "- description (1 sentence)",
+      "- nextDeadline (short date/time string)",
       "- techStack (3-6 items)",
       "- userStories (2-3 bullets)",
       "Return JSON ONLY in this exact shape:",
       "{",
       "  \"options\": [",
-      "    { \"name\": \"...\", \"description\": \"...\", \"techStack\": [\"...\"], \"userStories\": [\"...\"] }",
+      "    { \"name\": \"...\", \"description\": \"...\", \"nextDeadline\": \"...\", \"techStack\": [\"...\"], \"userStories\": [\"...\"] }",
       "  ]",
       "}",
       "Summary:",
@@ -335,6 +345,7 @@ export default function Popup() {
         options?: Array<{
           name: string;
           description: string;
+          nextDeadline: string;
           techStack: string[];
           userStories: string[];
         }>;
@@ -356,6 +367,7 @@ export default function Popup() {
   const handleSelectProjectOption = (option: {
     name: string;
     description: string;
+    nextDeadline: string;
     techStack: string[];
     userStories: string[];
   }) => {
@@ -363,6 +375,7 @@ export default function Popup() {
       id: `project-${Date.now().toString(36)}`,
       name: option.name.trim() || "New Project",
       description: option.description.trim(),
+      nextDeadline: option.nextDeadline?.trim() || "",
       lastUpdated: formatTimestamp(new Date()),
       techStack: option.techStack.map((item) => item.trim()).filter(Boolean),
       userStories: option.userStories.map((item) => item.trim()).filter(Boolean),

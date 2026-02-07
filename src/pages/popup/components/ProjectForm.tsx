@@ -5,6 +5,7 @@ import type { ProjectFormValues } from "./ProjectTypes";
 type AiProjectOption = {
   name: string;
   description: string;
+  nextDeadline: string;
   techStack: string[];
   userStories: string[];
 };
@@ -98,6 +99,11 @@ export default function ProjectForm({
                 >
                   <p className="text-sm font-semibold text-gray-100">{option.name}</p>
                   <p className="mt-1 text-xs text-gray-300">{option.description}</p>
+                  {option.nextDeadline && (
+                    <p className="mt-2 text-[11px] uppercase tracking-wider text-gray-400">
+                      Next deadline: {option.nextDeadline}
+                    </p>
+                  )}
                   <div className="mt-2 flex flex-wrap gap-2">
                     {option.techStack.map((tech) => (
                       <span
@@ -132,6 +138,16 @@ export default function ProjectForm({
               value={formValues.description}
               onChange={onFieldChange("description")}
               placeholder="Short summary"
+            />
+          </label>
+
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-xs uppercase tracking-wider text-gray-400">Next Deadline</span>
+            <input
+              className="rounded-xl border border-gray-700 bg-gray-900 px-3 py-2 text-sm text-gray-100"
+              value={formValues.nextDeadline}
+              onChange={onFieldChange("nextDeadline")}
+              placeholder="MM-DD-YY 3:30 PM"
             />
           </label>
 
