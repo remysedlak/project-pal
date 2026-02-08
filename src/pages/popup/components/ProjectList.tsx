@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import type { Project } from "./ProjectTypes";
 
 type ProjectListProps = {
@@ -8,6 +10,8 @@ type ProjectListProps = {
 };
 
 export default function ProjectList({ projects, onOpen, onEdit, onDelete }: ProjectListProps) {
+  const [confirmingDeleteId, setConfirmingDeleteId] = useState<string | null>(null);
+
   return (
     <div className="grid gap-3">
       {projects.map((project) => (
@@ -34,12 +38,35 @@ export default function ProjectList({ projects, onOpen, onEdit, onDelete }: Proj
               >
                 Edit
               </button>
-              <button
-                className="rounded-lg border border-rose-400/60 px-2 py-1 text-xs text-rose-300 transition hover:border-rose-300 hover:text-rose-200"
-                onClick={() => onDelete(project.id)}
-              >
-                Delete
-              </button>
+              {confirmingDeleteId === project.id ? (
+                <>
+                  <span className="text-[10px] uppercase tracking-wider text-rose-200/80">
+                    Are you sure?
+                  </span>
+                  <button
+                    className="rounded-lg border border-gray-700 px-2 py-1 text-xs text-gray-300 transition hover:border-gray-500 hover:text-white"
+                    onClick={() => setConfirmingDeleteId(null)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="rounded-lg border border-rose-400/80 bg-rose-500/10 px-2 py-1 text-xs text-rose-200 transition hover:border-rose-300 hover:text-rose-100"
+                    onClick={() => {
+                      setConfirmingDeleteId(null);
+                      onDelete(project.id);
+                    }}
+                  >
+                    Delete
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="rounded-lg border border-rose-400/60 px-2 py-1 text-xs text-rose-300 transition hover:border-rose-300 hover:text-rose-200"
+                  onClick={() => setConfirmingDeleteId(project.id)}
+                >
+                  Delete
+                </button>
+              )}
             </div>
           </div>
           <div className="mt-2 flex flex-wrap gap-2">

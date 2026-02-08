@@ -228,10 +228,6 @@ export default function Popup() {
       return;
     }
 
-    if (!window.confirm(`Delete ${project.name}?`)) {
-      return;
-    }
-
     setProjectList((prev) => prev.filter((item) => item.id !== projectId));
     if (activeProjectId === projectId) {
       setActiveProjectId(null);

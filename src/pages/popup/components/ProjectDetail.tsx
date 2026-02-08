@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { Project } from "./ProjectTypes";
 
@@ -35,8 +35,26 @@ export default function ProjectDetail({
 }: ProjectDetailProps) {
   const [expandedStory, setExpandedStory] = useState<string | null>(null);
   const [isBreakdownOpen, setIsBreakdownOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+
+  useEffect(() => {
+    setIsDeleteConfirmOpen(false);
+  }, [project.id]);
 
   const normalizeStoryKey = (value: string) => value.trim();
+
+  const getScoreLabel = (score: number | null | undefined) => {
+    if (score === null || score === undefined) {
+      return "-";
+    }
+    if (score <= 30) {
+      return "Low";
+    }
+    if (score <= 65) {
+      return "Medium";
+    }
+    return "High";
+  };
 
   const normalizedFeedback = useMemo(() => {
     const cleaned: Record<string, string> = {};
@@ -160,12 +178,35 @@ export default function ProjectDetail({
           >
             Edit
           </button>
-          <button
-            className="rounded-xl border border-rose-400/60 px-3 py-1 text-xs text-rose-300 transition hover:border-rose-300 hover:text-rose-200"
-            onClick={() => onDelete(project.id)}
-          >
-            Delete
-          </button>
+          {isDeleteConfirmOpen ? (
+            <>
+              <span className="text-[11px] uppercase tracking-wider text-rose-200/80">
+                Are you sure?
+              </span>
+              <button
+                className="rounded-xl border border-gray-700 px-3 py-1 text-xs text-gray-300 transition hover:border-gray-500 hover:text-white"
+                onClick={() => setIsDeleteConfirmOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="rounded-xl border border-rose-400/80 bg-rose-500/10 px-3 py-1 text-xs text-rose-200 transition hover:border-rose-300 hover:text-rose-100"
+                onClick={() => {
+                  setIsDeleteConfirmOpen(false);
+                  onDelete(project.id);
+                }}
+              >
+                Delete
+              </button>
+            </>
+          ) : (
+            <button
+              className="rounded-xl border border-rose-400/60 px-3 py-1 text-xs text-rose-300 transition hover:border-rose-300 hover:text-rose-200"
+              onClick={() => setIsDeleteConfirmOpen(true)}
+            >
+              Delete
+            </button>
+          )}
         </div>
       </div>
 
@@ -188,10 +229,10 @@ export default function ProjectDetail({
           <div>
             <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">Risk & Readiness</h3>
             <p className="mt-2 text-sm text-gray-200">
-              Risk: {project.riskScore ?? "-"} / 100
+              Risk: {getScoreLabel(project.riskScore)}
             </p>
             <p className="text-sm text-gray-200">
-              Readiness: {project.readinessScore ?? "-"} / 100
+              Readiness: {getScoreLabel(project.readinessScore)}
             </p>
           </div>
           <button
